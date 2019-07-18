@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 )
@@ -127,4 +128,10 @@ func AppendToFile(fileName string, content string) error {
 	}
 
 	return err
+}
+
+func CheckErr(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }
