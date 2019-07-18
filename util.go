@@ -2,6 +2,8 @@ package Taskutil
 
 import (
 	"bufio"
+	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -66,3 +68,50 @@ func PathExists(path string) (bool, error) {
 	}
 	return false, err
 }
+
+func GenerateShell(cmdline, filename, finishStr string){
+	if finishStr == ""{
+		finishStr = "Still_waters_run_deep"
+	}
+	//for file in glob.glob(shell + '.*'):
+	//os.remove(file)
+	cmdline = strings.TrimSuffix(cmdline, "\n")
+	//cmdline = fmt.Sprintf("echo -e ==========start at : `date +\"%Y-%m-%d %H-%M-%s\"` ==========\n") + cmdline
+	//cmdline = cmdline + fmt.Sprintf(" && \\\necho -e ==========end at : `date +\"%Y-%m-%d %H-%M-%s\"` ==========")
+	cmdline = cmdline + " && \\\necho " + finishStr + fmt.Sprintf(" >%s.sign", filename)
+
+	var f *os.File
+	if CheckFileIsExist(filename) { //如果文件存在
+		f, _ = os.OpenFile(filename, os.O_APPEND, 0666) //打开文件
+	} else {
+		f, _ = os.Create(filename)
+	}
+	_, _ = io.WriteString(f, cmdline)
+	w := bufio.NewWriter(f)
+	w.Flush()
+	f.Close()
+}
+
+func GenerateShell_PS(cmdline, filename, finishStr string){
+	if finishStr == ""{
+		finishStr = "Still_waters_run_deep"
+	}
+	//for file in glob.glob(shell + '.*'):
+	//os.remove(file)
+	cmdline = strings.TrimSuffix(cmdline, "\n")
+	cmdline = fmt.Sprintf("echo -e ==========start at : `date +\"%Y-%m-%d %H-%M-%s\"` ==========\n") + cmdline
+	cmdline = cmdline + fmt.Sprintf(" && \\\necho -e ==========end at : `date +\"%Y-%m-%d %H-%M-%s\"` ==========")
+	cmdline = cmdline + " && \\\necho " + finishStr + fmt.Sprintf(" >%s.sign", filename)
+
+	var f *os.File
+	if CheckFileIsExist(filename) { //如果文件存在
+		f, _ = os.OpenFile(filename, os.O_APPEND, 0666) //打开文件
+	} else {
+		f, _ = os.Create(filename)
+	}
+	_, _ = io.WriteString(f, cmdline)
+	w := bufio.NewWriter(f)
+	w.Flush()
+	f.Close()
+}
+
