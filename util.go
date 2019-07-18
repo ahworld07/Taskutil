@@ -115,3 +115,16 @@ func GenerateShell_PS(cmdline, filename, finishStr string){
 	f.Close()
 }
 
+func AppendToFile(fileName string, content string) error {
+	// 以只写的模式，打开文件
+	f, err := os.OpenFile(fileName, os.O_WRONLY, 0644)
+	defer f.Close()
+	if err == nil {
+		// 查找文件末尾的偏移量
+		n, _ := f.Seek(0, os.SEEK_END)
+		// 从末尾的偏移量开始写入内容
+		_, err = f.WriteAt([]byte(content), n)
+	}
+
+	return err
+}
